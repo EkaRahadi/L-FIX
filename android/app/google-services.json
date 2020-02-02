@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "233185835594",
+    "firebase_url": "https://lfix-47c4c.firebaseio.com",
+    "project_id": "lfix-47c4c",
+    "storage_bucket": "lfix-47c4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233185835594:android:7a137c108f6331226584b3",
+        "android_client_info": {
+          "package_name": "com.polindra.lfix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233185835594-och4q8mf0bo86liggkm7c2107485n5pi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmrmPM8IrQcUIWsBbs_Qa72VfemQstipM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233185835594-och4q8mf0bo86liggkm7c2107485n5pi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
