@@ -1,45 +1,22 @@
 import React from 'react';
-import { View, Alert, StatusBar, Image, Text, TextInput} from 'react-native';
+import { View, StatusBar, Image, Text, TextInput} from 'react-native';
 import PropTypes from 'prop-types';
 import Button from '../../components/elements/Button';
-import BasicTitle from '../../components/elements/Input/BasicTitle';
-import SplashScreen from '../SplashScreen'
 import { connect } from 'react-redux';
 import {loginSuccess} from '../../actions';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
-import PhoneInput from "react-native-phone-input";
-import AppIntroSlider from 'react-native-app-intro-slider';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import firebase from 'react-native-firebase';
-// import {ENDPOINT} from 'app/configs';
-
-const slides=[
-  {
-    key:'satu',
-    title:'Title 1',
-    text: 'L-Fix partners are professional partners who have \n been recognized in their fields. ',
-    image: require('../../../assets/images/carousel.jpeg'),
-    backgroundColor: '#FFFFFF'
-  },
-  {
-    key:'dua',
-    title:'Title 2',
-    text: 'Ready to come for maintain and repair your \n electronics stuff',
-    image: require('../../../assets/images/samsung.jpg'),
-    // backgroundColor: '#FFFFFF'
-  }
-];
 class Component extends React.Component {
     state = {
       email : '',
       password : '',
-      isSplashScreen : true,
-      showRealApp:false,
       isCodeSent: false,
       phoneNumber: '+62',
       message: '',
-      disabled: false
+      disabled: false,
+      isValid: null
     }
 
   _login = () => {
@@ -162,30 +139,6 @@ class Component extends React.Component {
     );
   }
 
-  _renderItem = (item) => {
-    return (
-      <View style={{backgroundColor:'#000', flex:1}}>
-        <Text style={styles.judul}>{item.title}</Text>
-        <Image source={item.image} />
-        <Text style={styles.text}>{item.text}</Text>
-      </View>
-    );
-  }
-
-  _onDone = () => {
-    // User finished the introduction. Show real app through
-    // navigation or simply by controlling state
-    this.setState({ showRealApp: true });
-  }
-
-  componentDidMount() {
-    setTimeout( () => {
-      this.setState({
-        isSplashScreen : false
-      })
-    },2000)
-  }
-
   renderMessage = () => {
     const { message } = this.state;
 
@@ -197,13 +150,7 @@ class Component extends React.Component {
   }
     
   render() {
-    if(this.state.isSplashScreen) {
-      return <SplashScreen/>
-    }
-    // else if(!this.state.isSplashScreen && this.state.showRealApp==false) {
-    //    return <AppIntroSlider renderItem={this._renderItem} slides={slides} onDone={this._onDone}/>;
-    // }
-    else if(this.state.isCodeSent) {
+    if (this.state.isCodeSent) {
       this._renderVerficationUI()
     }
     return (

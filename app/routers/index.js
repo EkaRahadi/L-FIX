@@ -16,6 +16,8 @@ import OnProcessScreen from '../screens/OnProcessScreen';
 import DoneScreen from '../screens/DoneScreen';
 import RatingScreen from '../screens/RatingScreen';
 import DetailGuaranteeScreen from '../screens/DetailGuarantee';
+import LoginRegisterScreen from '../screens/LoginRegister';
+import RegisterScreen from '../screens/RegisterScreen';
 
 export default SwitchNavigator(
   {
@@ -35,9 +37,11 @@ export default SwitchNavigator(
     OnProcess : OnProcessScreen,
     Done : DoneScreen,
     Rating: RatingScreen,
-    DetailGuarantee: DetailGuaranteeScreen
+    DetailGuarantee: DetailGuaranteeScreen,
+    LoginRegister: LoginRegisterScreen,
+    Register: RegisterScreen
   },
   {
-    initialRouteName: 'OnBoarding'
+    initialRouteName: 'LoginRegister'
   }
 );
