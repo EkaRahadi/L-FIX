@@ -84,3 +84,13 @@ export const getDetailEvent = (data) => {
         payload: data
     }
 }
+
+// =================================LFIX=====================================================================
+
+export const userAccount = (data, status) => {
+    return {
+        type: 'USER_ACCOUNT',
+        payload: data,
+        status: status
+    }
+}
