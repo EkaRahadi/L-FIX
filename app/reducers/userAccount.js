@@ -11,6 +11,11 @@ const userAccountReducer = (state = initialState, action) => {
                 data : action.payload,
                 userLogin : action.status
             };
+        case 'USER_LOGOUT' :
+            return {
+                data: null,
+                userLogin: false
+            }
         default :
             return state;
     }

@@ -203,7 +203,7 @@ class Component extends React.Component {
     if (!message.length) return null;
 
     return (
-      <Text style={{ padding: 5, backgroundColor: '#175873', color: '#fff' }}>{message}</Text>
+      <Text style={{ padding: 5, backgroundColor: '#DB1313', color: '#fff' }}>{message}</Text>
     );
   }
     

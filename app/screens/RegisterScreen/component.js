@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, StatusBar, Image, Text, TouchableOpacity, TextInput} from 'react-native';
+import { View, StatusBar, Image, Text, TouchableOpacity, TextInput, Alert} from 'react-native';
 import Back from '../../../assets/svgs/Back';
 import Button from '../../components/elements/Button';
 import styles from './styles';
+import network from '../../network';
+import { connect } from 'react-redux';
+import {userAccount} from '../../actions';
 
 class Component extends React.Component {
 
@@ -20,8 +23,72 @@ class Component extends React.Component {
     this.props.navigation.navigate('LoginRegister');
   }
 
-  _onPress = () => {
+  _onPress = async () => {
     //Handle here
+    console.log(this.state.phoneNumber);
+    const userRegistered = new Promise( async (resolve, reject) => {
+      await fetch(network.ADDRESS+'/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+          phone : this.state.phoneNumber
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          if(responseJson.success === true) {
+            resolve({
+              userRegistered: true
+            })
+          }
+          else {
+            reject({
+              userRegistered: false
+            })
+          }
+        })
+        .catch(response => Alert(response))
+    })
+
+    await userRegistered
+                  .then(response => {
+                    console.log(response)
+                    Alert.alert('Phone Number Already Registered !');
+                  })
+                  .catch(response => {
+                    console.log(response)
+                    // Insert User Into DB
+                    fetch(network.ADDRESS+'/register', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type' : 'application/json'
+                      },
+                      body: JSON.stringify({
+                        phone : this.state.phoneNumber,
+                        email: this.state.email,
+                        name: this.state.fullName
+                      })
+                    }).then(response => response.json())
+                      .then(response => {
+                        console.log(response);
+                        if(response.success === true) {
+                          Alert.alert('Registration Success');
+                          // Dispatch To Reducer
+
+                          // Navigate
+                          this.props.navigation.navigate('OnBoarding');
+                        }
+                        else {
+                          Alert.alert('Error')
+                        }
+                      })
+                      .catch(response => {
+                        Alert.alert(response);
+                      })
+                  })
+    console.log(this.state.fullName);
   }
 
   render() {
@@ -87,4 +154,16 @@ class Component extends React.Component {
   }
 }
 
-export default (Component)
+const mapStateToProps = state => {
+  return {
+    userAccount : state.userAccount,
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatchUserAccount: (account) => dispatch(userAccount(account, true)),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Component)

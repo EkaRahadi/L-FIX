@@ -94,3 +94,9 @@ export const userAccount = (data, status) => {
         status: status
     }
 }
+
+export const userLogout = () => {
+    return {
+        type: 'USER_LOGOUT'
+    }
+}
