@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StatusBar, SectionList, Text, TouchableOpacity, TextInput} from 'react-native';
+import { View, Image, StatusBar, SectionList, Text, TouchableOpacity, TextInput, FlatList} from 'react-native';
 import PropTypes from 'prop-types';
 import MainScreen from '../../components/layouts/MainScreen';
 // import Header from '../../components/elements/Header';
@@ -14,8 +14,76 @@ class Component extends React.Component {
     this.state = {
       isLoading: true,
       bandwitdh: '0',
-      dataSource: [],
-      // data : this.props.user.response.data.key
+      data : [
+        {
+            "name": "Mesin Cuci",
+            "image": "mesincuci.jpg",
+            "jenis kerusakan": [
+                {
+                    "nama": "Dinamo rusak",
+                    "harga": 120000
+                },
+                {
+                    "nama": "Seal Bocor",
+                    "harga": 25000
+                }
+            ]
+        },
+        {
+            "name": "Kipas Angin",
+            "image": "Kipas.jpg",
+            "jenis kerusakan": [
+                {
+                    "nama": "Kabel Putus",
+                    "harga": 5000
+                },
+                {
+                    "nama": "Mesin Macet",
+                    "harga": 5000
+                },
+                {
+                    "nama": "Mesin Terbakar",
+                    "harga": 45000
+                }
+            ]
+        },
+        {
+          "name": "AC",
+          "image": "Kipas.jpg",
+          "jenis kerusakan": [
+              {
+                  "nama": "Kabel Putus",
+                  "harga": 5000
+              },
+              {
+                  "nama": "Mesin Macet",
+                  "harga": 5000
+              },
+              {
+                  "nama": "Mesin Terbakar",
+                  "harga": 45000
+              }
+          ]
+      },
+      {
+        "name": "AC",
+        "image": "Kipas.jpg",
+        "jenis kerusakan": [
+            {
+                "nama": "Kabel Putus",
+                "harga": 5000
+            },
+            {
+                "nama": "Mesin Macet",
+                "harga": 5000
+            },
+            {
+                "nama": "Mesin Terbakar",
+                "harga": 45000
+            }
+        ]
+    }
+    ]
     };
   }
 
@@ -52,51 +120,26 @@ class Component extends React.Component {
               </View>
           </TouchableOpacity>
         </View>
-        <View style={{backgroundColor:'#175873',flexDirection:'row', flexWrap: 'wrap', width:380, height: 370, borderRadius: 100/4, marginTop:150, marginLeft:16}}>
+        <View style={{backgroundColor:'#175873',flexDirection: 'row', flexWrap: 'wrap', width:380, height: 370, borderRadius: 100/4, marginTop:150, marginLeft:16,justifyContent: 'space-between'}}>
           {/* Box Kotak */}
-          <View style={{flexDirection:'row', justifyContent: 'space-between', width: '100%'}}> 
-          <TouchableOpacity onPress={this._onPress}>
-            <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginHorizontal:10, borderRadius:100/6}}>
-              <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
-                {/* Gambar */}
-                <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={require('../../../assets/images/kulkas.png')}/>
-              </View>
-              <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
-              <Text style={{color:'#000', alignSelf:'center'}}>Refrigerator</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._onPress}>
-            <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginHorizontal:10, borderRadius:100/6}}>
-              <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
-                {/* Gambar */}
-                <Image style={{width:60, height:60, marginTop: 13, marginLeft:10}} source={require('../../../assets/images/ac.png')}/>
-              </View>
-              <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
-              <Text style={{color:'#000', alignSelf:'center'}}>AC</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this._onPress} >
-            <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginHorizontal:10, borderRadius:100/6}}>
-              <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
-                {/* Gambar */}
-                <Image style={{width:70, height:70, marginTop: 10,}} source={require('../../../assets/images/gadgets.png')}/>
-              </View>
-              <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
-              <Text style={{color:'#000', alignSelf:'center'}}>Gadgets</Text>
-            </View>
-          </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={this._onPress}>
-            <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginLeft:10, borderRadius:100/6}}>
-              <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
-                {/* Gambar */}
-                <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={require('../../../assets/images/cuci.png')}/>
-              </View>
-              <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
-              <Text style={{color:'#000', alignSelf:'center', fontSize:12}}>Washing
-              Mechine</Text>
-            </View>
-          </TouchableOpacity>
+          <FlatList
+            data={this.state.data}
+            keyExtractor={ (item, index) => index.toString()}
+            horizontal={false}
+            numColumns={3}
+            renderItem={({item, index}) => (
+            <TouchableOpacity onPress={this._onPress}>
+                <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginHorizontal:10, borderRadius:100/6}}>
+                    <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
+                    {/* Gambar */}
+                        <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={require('../../../assets/images/cuci.png')}/>
+                    </View>
+                    <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
+                        <Text style={{color:'#000', alignSelf:'center'}}>Mesin Cuci</Text>
+                </View>
+            </TouchableOpacity>
+            )}
+          />
         </View>
         <Image style={styles.carousel} source={require('../../../assets/images/carousel.jpeg')}/>
       </View>
