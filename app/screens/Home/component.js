@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Image, StatusBar, SectionList, Text, TouchableOpacity, TextInput, FlatList} from 'react-native';
+import { View, Image, StatusBar, SectionList, Text, TouchableOpacity, TextInput, FlatList, Alert} from 'react-native';
 import PropTypes from 'prop-types';
-import MainScreen from '../../components/layouts/MainScreen';
-// import Header from '../../components/elements/Header';
 import styles from './styles';
 import { connect } from 'react-redux';
-import {getDataProject, getSquadSelected} from '../../actions';
+import {getDataProject, getSquadSelected, dataCategory} from '../../actions';
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
+import network from '../../network';
 
 
 class Component extends React.Component {
@@ -14,77 +14,46 @@ class Component extends React.Component {
     this.state = {
       isLoading: true,
       bandwitdh: '0',
-      data : [
-        {
-            "name": "Mesin Cuci",
-            "image": "mesincuci.jpg",
-            "jenis kerusakan": [
-                {
-                    "nama": "Dinamo rusak",
-                    "harga": 120000
-                },
-                {
-                    "nama": "Seal Bocor",
-                    "harga": 25000
-                }
-            ]
-        },
-        {
-            "name": "Kipas Angin",
-            "image": "Kipas.jpg",
-            "jenis kerusakan": [
-                {
-                    "nama": "Kabel Putus",
-                    "harga": 5000
-                },
-                {
-                    "nama": "Mesin Macet",
-                    "harga": 5000
-                },
-                {
-                    "nama": "Mesin Terbakar",
-                    "harga": 45000
-                }
-            ]
-        },
-        {
-          "name": "AC",
-          "image": "Kipas.jpg",
-          "jenis kerusakan": [
-              {
-                  "nama": "Kabel Putus",
-                  "harga": 5000
-              },
-              {
-                  "nama": "Mesin Macet",
-                  "harga": 5000
-              },
-              {
-                  "nama": "Mesin Terbakar",
-                  "harga": 45000
-              }
-          ]
-      },
-      {
-        "name": "AC",
-        "image": "Kipas.jpg",
-        "jenis kerusakan": [
-            {
-                "nama": "Kabel Putus",
-                "harga": 5000
-            },
-            {
-                "nama": "Mesin Macet",
-                "harga": 5000
-            },
-            {
-                "nama": "Mesin Terbakar",
-                "harga": 45000
-            }
-        ]
-    }
-    ]
+      data : []
     };
+  }
+
+  async componentDidMount() {
+    const getData = new Promise(async (resolve, reject) => {
+      await fetch(network.ADDRESS+'/kategoriBarang', {
+        method: 'GET',
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          if(responseJson.success === true) {
+            resolve({
+              status: true,
+              data: responseJson.data,
+            })
+          }
+          else {
+            reject({
+              status: false,
+              data: null
+            })
+          }
+        })
+          .catch( response => Alert.alert(JSON.stringify(response)))
+    })
+
+    // Call Promise
+    await getData
+            .then(response => {
+              this.setState({
+                isLoading: false,
+                data: response.data
+              })
+            })
+            .catch(response => console.log(response))
+    console.log(this.state.data);
   }
 
   _onPress = () => {
@@ -128,20 +97,32 @@ class Component extends React.Component {
             horizontal={false}
             numColumns={3}
             renderItem={({item, index}) => (
-            <TouchableOpacity onPress={this._onPress}>
+            <TouchableOpacity onPress={ async () => {
+             await this.props.dispatchDataCategory(item.name, item.image, item.jenis_kerusakan);
+             this.props.navigation.navigate('Find');
+            }}>
                 <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginHorizontal:10, borderRadius:100/6}}>
                     <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
                     {/* Gambar */}
-                        <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={require('../../../assets/images/cuci.png')}/>
+                        <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={{uri: network.ADDRESS+item.image.slice(14)}}/>
                     </View>
                     <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
-                        <Text style={{color:'#000', alignSelf:'center'}}>Mesin Cuci</Text>
+                        <Text style={{color:'#000', alignSelf:'center'}}>{item.name}</Text>
                 </View>
             </TouchableOpacity>
             )}
           />
         </View>
         <Image style={styles.carousel} source={require('../../../assets/images/carousel.jpeg')}/>
+
+        {/* Loading */}
+        <OrientationLoadingOverlay
+          visible={this.state.isLoading}
+          color="white"
+          indicatorSize="large"
+          messageFontSize={24}
+          message="Loading..."
+          />
       </View>
     );
   }
@@ -159,16 +140,15 @@ const mapStateToProps = state => {
   return {
      projects : state.dataProject,
      user : state.user,
-     dataUser : state.dataProject
-
-     
+     dataUser : state.dataProject     
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     sendDataProjects : (index) => dispatch(getDataProject(index)),
-    squadChoosen : (select) => dispatch(getSquadSelected(select))
+    squadChoosen : (select) => dispatch(getSquadSelected(select)),
+    dispatchDataCategory : (name, image, jenisKerusakan) => dispatch(dataCategory(name, image, jenisKerusakan))
   }
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Component)

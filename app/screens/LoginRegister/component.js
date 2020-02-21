@@ -115,7 +115,12 @@ class Component extends React.Component {
                 </View>
             </TouchableOpacity>
       
-            <TouchableOpacity onPress={() => {this.props.navigation.navigate('Register')}}>
+            {/* <TouchableOpacity onPress={() => {this.props.navigation.navigate('Register')}}>
+                <View style={{backgroundColor: '#175873', height: 33, width:130, borderRadius:25, justifyContent: 'center', alignItems: 'center', marginLeft: 60}}>
+                    <Text style={{color:'#FFFFFF', fontFamily: 'roboto', fontWeight: 'bold', fontSize: 20}}>Register</Text>
+                </View>
+            </TouchableOpacity> */}
+            <TouchableOpacity onPress={() => {this.props.navigation.navigate('Home')}}>
                 <View style={{backgroundColor: '#175873', height: 33, width:130, borderRadius:25, justifyContent: 'center', alignItems: 'center', marginLeft: 60}}>
                     <Text style={{color:'#FFFFFF', fontFamily: 'roboto', fontWeight: 'bold', fontSize: 20}}>Register</Text>
                 </View>

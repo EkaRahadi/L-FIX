@@ -13,6 +13,10 @@ import dataPointReducer from './dataPoint';
 import updateDataPointReducer from './dataAsync';
 import detailEventReducer from './detailEvent';
 import userAccountReducer from './userAccount';
+import dataKategoriReducer from './dataKategori';
+import waitingServiceReducer from './waitingService';
+import onProcessServiceReducer from './onProcessService';
+import doneServiceReducer from './doneService';
 
 const rootReducer = combineReducers({
   // form: formReducer,
@@ -29,7 +33,11 @@ const rootReducer = combineReducers({
   // updateDataPoint: updateDataPointReducer,
   // detailEvent : detailEventReducer,
   // ======================================LFIX======================================================
-  userAccount : userAccountReducer
+  userAccount : userAccountReducer,
+  dataCategory: dataKategoriReducer,
+  waitingService: waitingServiceReducer,
+  onProcessService: onProcessServiceReducer,
+  doneService: doneServiceReducer
 });
 
 export default rootReducer;

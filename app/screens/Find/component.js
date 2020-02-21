@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StatusBar, FlatList, Text, TextInput, ImageBackground, ScrollView } from 'react-native';
+import { View, Image, StatusBar, FlatList, Text, TextInput, ImageBackground, ScrollView, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
@@ -7,16 +7,19 @@ import { connect } from 'react-redux';
 import {getDataProject, getSquadSelected} from '../../actions';
 import Checkbox from 'react-native-custom-checkbox';
 import Button from '../../components/elements/Button';
+import network from '../../network';
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 
 
 class Component extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
+      isLoading: false,
       bandwitdh: '0',
       dataSource: [],
-      data: [{nama:'Freon', harga:'Rp.30.000'}, {nama:'Lampu', harga:'Rp.50.000'}]
+      data: [{nama:'Freon', harga:'Rp.30.000'}, {nama:'Lampu', harga:'Rp.50.000'}],
+      location: ''
       // data : this.props.user.response.data.key
     };
   }
@@ -32,7 +35,64 @@ class Component extends React.Component {
   _onPress = () => {
     this.props.navigation.navigate('Home');
   };
+
+  _findTechnician = async () => {
+    this.setState({
+      isLoading: true
+    })
+    await fetch(network.ADDRESS+'/service', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        lokasiPelanggan: this.state.location,
+        kategori: this.props.dataCategory.nameCategory,
+        userId: 3
+      })
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        if(responseJson.success === true) {
+          this.setState({
+            isLoading: false
+          })
+          Alert.alert(
+            'Find Technician',
+            'Looking for a technician !',
+            [
+              {text: 'OK', onPress: () => this.props.navigation.navigate('ServiceScreen')},
+            ],
+            {cancelable: false},
+          );
+        }
+        else
+        {
+          this.setState({
+            isLoading: false
+          })
+          Alert.alert(
+            'Find Technician',
+            'Failed find a technician !',
+            [
+              {text: 'OK'},
+            ],
+            {cancelable: false},
+          );
+        }
+      })
+      .catch(error => {
+        this.setState({
+          isLoading: false
+        })
+        Alert.alert('Error : '+JSON.stringify(error))
+      })
+    
+  }
+
   render() {
+    // console.log(this.props.dataCategory.nameCategory);
+    console.log(this.state.location);
     return (
       <View style={{backgroundColor: '#ffffff', flex:1}}>
         <StatusBar
@@ -42,7 +102,7 @@ class Component extends React.Component {
              />
         <View style={{backgroundColor: '#175873', height : 56, width: 411, flexDirection: 'row'}}>
           <Back style={{alignSelf:'flex-start', marginTop: 10, marginLeft : 10}} onPress={this._onPress}/>
-          <Text style={styles.title}>Refrigerator</Text>
+          <Text style={styles.title}>{this.props.dataCategory.nameCategory}</Text>
         </View>
 
         <View style={{borderWidth:1, borderRadius:100/10, height: 40, width:350, marginTop:30, alignSelf:'center', flexDirection:'row', justifyContent:'center'}}>
@@ -60,6 +120,10 @@ class Component extends React.Component {
             placeholderTextColor="black"
             numberOfLines={10}
             multiline={true}
+            onChangeText={text => this.setState({
+              ...this.state,
+              location: text
+            })}
             />
           </View>
         </View>
@@ -74,27 +138,15 @@ class Component extends React.Component {
         {/* <ScrollView> */}
           <View style={{height:200, width:300, borderWidth:1, borderRadius:10, marginTop:10, alignSelf:'center'}}>
             <FlatList
-                  data={this.state.data}
+                  data={this.props.dataCategory.jenisKerusakan}
                   ItemSeparatorComponent={this.FlatListItemSeparator}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({item, index}) => (
                     <View  style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', width:300, alignSelf:'center'}}>
-                      <Text style={styles.item} onPress={ async () =>
-                      {
-                        const dataMeasure = {id: item.measurementId, name: item.name}
-                        await this.props.measureChoosen(dataMeasure)
-                        this.props.navigation.navigate('GiveAssessment')
-                      }
-                      }>
+                      <Text style={styles.item} disabled={true}>
                         {item.nama}
                       </Text>
-                      <Text style={styles.item} onPress={ async () =>
-                      {
-                        const dataMeasure = {id: item.measurementId, name: item.name}
-                        await this.props.measureChoosen(dataMeasure)
-                        this.props.navigation.navigate('GiveAssessment')
-                      }
-                      }>
+                      <Text style={styles.item} disabled={true}>
                         {item.harga}
                       </Text>
                     </View>
@@ -103,22 +155,18 @@ class Component extends React.Component {
             </View>
           {/* </ScrollView> */}
 
-          <View style={{marginTop:30, justifyContent:'flex-start', width:350, flexDirection:'row', alignSelf:'center'}}>
-            <Checkbox
-              // name = {item.key}
-              name='checkbox1'
-              checked={false}
-              style={{backgroundColor: '#175873', color:'#ffffff', borderRadius: 2}}
-              // onChange={(name, checked) =>this._handleOnChange(name, checked)}
-            /> 
-            <Text style={{color:'black', fontSize:15, marginLeft:5}}>
-              Layanan satu hari jadi
-            </Text>
+          <View style={{flexDirection:'row', justifyContent:'center', marginTop:30}}>
+          <Button title="cari teknisi" disabled={false} onPress={this._findTechnician} type="raised-ripple" />
           </View>
 
-          <View style={{flexDirection:'row', justifyContent:'center', marginTop:30}}>
-          <Button title="cari teknisi" disabled={false} onPress={ () => this.props.navigation.navigate('Verification')} type="raised-ripple" />
-          </View>
+          {/* Loading */}
+        <OrientationLoadingOverlay
+          visible={this.state.isLoading}
+          color="white"
+          indicatorSize="large"
+          messageFontSize={24}
+          message="Loading..."
+          />
       </View>
     );
   }
@@ -134,9 +182,11 @@ Component.defaultProps = {
 
 const mapStateToProps = state => {
   return {
-     projects : state.dataProject,
-     user : state.user,
-     dataUser : state.dataProject
+    //  projects : state.dataProject,
+    //  user : state.user,
+    //  dataUser : state.dataProject,
+    dataCategory:state.dataCategory,
+    userAccount:state.userAccount
 
      
   }

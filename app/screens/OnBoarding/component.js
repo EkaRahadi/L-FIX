@@ -114,6 +114,7 @@ class Component extends React.Component {
                   console.log('auto verified on android');
                   console.log(phoneAuthSnapshot);
                   await this.storeDataUser(response.data);
+                  await this.props.dispatchUserAccount(response.data);
                   this.props.navigation.navigate('Home');
                   // Example usage if handling here and not in optionalCompleteCb:
                   // const { verificationId, code } = phoneAuthSnapshot;

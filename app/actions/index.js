@@ -100,3 +100,37 @@ export const userLogout = () => {
         type: 'USER_LOGOUT'
     }
 }
+
+export const dataCategory = (name, image, jenisKerusakan) => {
+    return {
+        type: 'SAVE_DATA_CATEGORY',
+        name: name,
+        image: image,
+        payload: jenisKerusakan
+
+    }
+}
+
+export const waitingService = (data) => {
+    return {
+        type: 'WAITING_SERVICE',
+        payload: data
+
+    }
+}
+
+export const onProcessService = (data) => {
+    return {
+        type: 'ONPROCESS_SERVICE',
+        payload: data
+
+    }
+}
+
+export const doneService = (data) => {
+    return {
+        type: 'DONE_SERVICE',
+        payload: data
+
+    }
+}
