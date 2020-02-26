@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, FlatList,Text,Image, ActivityIndicator, TouchableOpacity, Alert} from 'react-native';
 import Tabs from '../../components/elements/Tabs';
-import {waitingService, onProcessService, doneService} from '../../actions';
+import {waitingService, onProcessService, doneService, detailWaiting} from '../../actions';
 import { connect } from 'react-redux';
 import styles from './styles';
 import network from '../../network';
@@ -102,7 +102,10 @@ class Component extends React.Component {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => (
                   <View>
-                    <TouchableOpacity onPress={() => {this.props.navigation.navigate('Waiting')}}>
+                    <TouchableOpacity onPress={async () => {
+                     await this.props.dispatchDetailWaiting(item.kategori, item.lokasiPelanggan, item.teknisi);
+                      this.props.navigation.navigate('Waiting');
+                    }}>
                       <View style={styles.containerInsideTab}>
                         <View style={{marginLeft: 5,marginTop:5}}>
                           <Text style={{fontSize: 22, fontWeight: '500',color:'#000000',fontFamily:'roboto'}}>{item.kategori}</Text>
@@ -141,7 +144,7 @@ class Component extends React.Component {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => (
                   <View>
-                    <TouchableOpacity onPress={() => {this.props.navigation.navigate('Waiting')}}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.navigate('OnProcess')}}>
                       <View style={styles.containerInsideTab}>
                         <View style={{marginLeft: 5,marginTop:5}}>
                           <Text style={{fontSize: 22, fontWeight: '500',color:'#000000',fontFamily:'roboto'}}>{item.kategori}</Text>
@@ -169,7 +172,7 @@ class Component extends React.Component {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => (
                   <View>
-                    <TouchableOpacity onPress={() => {this.props.navigation.navigate('Waiting')}}>
+                    <TouchableOpacity onPress={() => {this.props.navigation.navigate('Done')}}>
                       <View style={styles.containerInsideTab}>
                         <View style={{marginLeft: 5,marginTop:5}}>
                           <Text style={{fontSize: 22, fontWeight: '500',color:'#000000',fontFamily:'roboto'}}>{item.kategori}</Text>
@@ -229,9 +232,8 @@ const mapDispatchToProps = dispatch => {
   return {
     dispatchWaiting : (waiting) => dispatch(waitingService(waiting)),
     dispatchOnProcess : (onProcess) => dispatch(onProcessService(onProcess)),
-    dispatchDone : (done) => dispatch(doneService(done))
-
-
+    dispatchDone : (done) => dispatch(doneService(done)),
+    dispatchDetailWaiting: (kategori, lokasiPelanggan, teknisi) => dispatch(detailWaiting(kategori, lokasiPelanggan, teknisi))
   }
 };
 

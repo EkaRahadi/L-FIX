@@ -17,6 +17,8 @@ import dataKategoriReducer from './dataKategori';
 import waitingServiceReducer from './waitingService';
 import onProcessServiceReducer from './onProcessService';
 import doneServiceReducer from './doneService';
+import detailWaitingReducer from './detailWaiting';
+import detailTechnicianReducer from './detailTechnician';
 
 const rootReducer = combineReducers({
   // form: formReducer,
@@ -37,7 +39,9 @@ const rootReducer = combineReducers({
   dataCategory: dataKategoriReducer,
   waitingService: waitingServiceReducer,
   onProcessService: onProcessServiceReducer,
-  doneService: doneServiceReducer
+  doneService: doneServiceReducer,
+  detailWaiting: detailWaitingReducer,
+  detailTechnician: detailTechnicianReducer
 });
 
 export default rootReducer;

@@ -134,3 +134,20 @@ export const doneService = (data) => {
 
     }
 }
+
+export const detailWaiting = (kategori, lokasiPelanggan, data) => {
+    return {
+        type: 'DETAIL_WAITING',
+        payload: data,
+        kategori: kategori,
+        lokasiPelanggan: lokasiPelanggan
+
+    }
+}
+
+export const detailTecnician = (data) => {
+    return {
+        type: 'DETAIL_TECHNICIAN',
+        payload: data,
+    }
+}
