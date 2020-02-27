@@ -19,6 +19,10 @@ import onProcessServiceReducer from './onProcessService';
 import doneServiceReducer from './doneService';
 import detailWaitingReducer from './detailWaiting';
 import detailTechnicianReducer from './detailTechnician';
+import detailOnProcessReducer from './detailOnProcess';
+import detailDamageReducer from './detailDamages';
+import detailDoneReducer from './detailDone';
+import ratingReducer from './rating';
 
 const rootReducer = combineReducers({
   // form: formReducer,
@@ -41,7 +45,11 @@ const rootReducer = combineReducers({
   onProcessService: onProcessServiceReducer,
   doneService: doneServiceReducer,
   detailWaiting: detailWaitingReducer,
-  detailTechnician: detailTechnicianReducer
+  detailTechnician: detailTechnicianReducer,
+  detailOnProcess: detailOnProcessReducer,
+  detailDamage: detailDamageReducer,
+  detailDone: detailDoneReducer,
+  rating: ratingReducer
 });
 
 export default rootReducer;

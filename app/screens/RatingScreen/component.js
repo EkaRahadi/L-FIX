@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Image, StatusBar, Text, TouchableOpacity} from 'react-native';
 import Textarea from 'react-native-textarea';
+import {waitingService, onProcessService, rating} from '../../actions';
+import { connect } from 'react-redux';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
 
@@ -31,7 +33,6 @@ class Component extends React.Component {
   }
 
   render() {
-
     let React_Native_Rating_Bar = [];
     for (var i = 1; i<= this.state.Max_Rating; i++){
       React_Native_Rating_Bar.push(
@@ -77,7 +78,7 @@ class Component extends React.Component {
                   source={require('../../../assets/images/mechanic-user-medium.png')}
               />
             </View>
-            <Text style={{color: '#000000', fontWeight: '500', fontFamily: 'roboto', fontSize: 20}}>Elba Ayu Kurnia</Text>
+            <Text style={{color: '#000000', fontWeight: '500', fontFamily: 'roboto', fontSize: 20}}>{this.props.teknisi.teknisi.namaTeknisi}</Text>
           </View>
 
           {/* Rating */}
@@ -93,16 +94,16 @@ class Component extends React.Component {
             {/* Specialist */}
             <View style={{flexDirection: 'row', marginBottom: 5, marginRight: 15}}>
                 <Text style={{flexWrap: 'wrap', marginLeft: 130}}>Specialist : </Text>
-                <Text style={{flexWrap: 'wrap', flex: 1}}>Refrigerator , AC</Text>
+                <Text style={{flexWrap: 'wrap', flex: 1}}>{this.props.teknisi.teknisi.specialist}</Text>
             </View>
             {/* Phone */}
             <View style={{flexDirection: 'row', marginBottom: 5}}>
               <Text>Phone : </Text>
-              <Text>087889057672</Text>
+              <Text>Phone key nya masih pake spasi</Text>
             </View>
       
             {/* Location */}
-            <Text style={{marginLeft: 30}}>Jl. Asia Afrika No.32</Text>
+            <Text style={{marginLeft: 30}}>{this.props.teknisi.teknisi.lokasiTeknisi}</Text>
             <Image
               style={{position: 'absolute', top: 45, left: 130}}
               source={require('../../../assets/images/small_location_red.png')}
@@ -134,4 +135,18 @@ class Component extends React.Component {
   }
 }
 
-export default (Component)
+const mapStateToProps = state => {
+  return {
+    teknisi: state.rating
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatchWaiting : (waiting) => dispatch(waitingService(waiting)),
+    dispatchOnProcess : (onProcess) => dispatch(onProcessService(onProcess)),
+    dispatchDataRating: (teknisi) => dispatch(rating(teknisi))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Component)

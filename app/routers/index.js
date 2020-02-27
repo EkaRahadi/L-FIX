@@ -18,7 +18,9 @@ import RatingScreen from '../screens/RatingScreen';
 import DetailGuaranteeScreen from '../screens/DetailGuarantee';
 import LoginRegisterScreen from '../screens/LoginRegister';
 import RegisterScreen from '../screens/RegisterScreen';
-import DetailTechnician from '../screens/DetailTechnician'
+import DetailTechnician from '../screens/DetailTechnician';
+import DetailDamages from '../screens/DetailDamages';
+import DetailDamagesDone from '../screens/DetailDamagesDone';
 
 export default SwitchNavigator(
   {
@@ -41,7 +43,9 @@ export default SwitchNavigator(
     DetailGuarantee: DetailGuaranteeScreen,
     LoginRegister: LoginRegisterScreen,
     Register: RegisterScreen,
-    DetailTechnician: DetailTechnician
+    DetailTechnician: DetailTechnician,
+    DetailDamages: DetailDamages,
+    DetailDamagesDone: DetailDamagesDone
   },
   {
     initialRouteName: 'LoginRegister'

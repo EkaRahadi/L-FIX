@@ -151,3 +151,37 @@ export const detailTecnician = (data) => {
         payload: data,
     }
 }
+
+export const detailOnProcess = (damage, lokasiPelanggan, teknisi) => {
+    return {
+        type: 'DETAIL_ONPROCESS',
+        teknisi: teknisi,
+        damage: damage,
+        lokasiPelanggan: lokasiPelanggan
+
+    }
+}
+
+export const detailDamages = (data) => {
+    return {
+        type: 'DETAIL_DAMAGES',
+        payload: data,
+    }
+}
+
+export const detailDone = (damage, lokasiPelanggan, teknisi) => {
+    return {
+        type: 'DETAIL_DONE',
+        teknisi: teknisi,
+        damage: damage,
+        lokasiPelanggan: lokasiPelanggan
+
+    }
+}
+
+export const rating = (teknisi) => {
+    return {
+        type: 'RATING',
+        teknisi: teknisi
+    }
+}

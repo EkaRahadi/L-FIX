@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Image, StatusBar, Text, TouchableOpacity } from 'react-native';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
+import {detailWaiting, detailOnProcess, detailDamages} from '../../actions';
+import { connect } from 'react-redux';
 // import Checkbox from 'react-native-custom-checkbox';
 import Button from '../../components/elements/Button';
 
@@ -35,25 +37,63 @@ class Component extends React.Component {
         <View style={{flex:1}}>
           <View>
             {/* Service */}
-            <TouchableOpacity>
-              <View style={{borderBottomWidth: 1, height: 60, borderBottomColor: '#C4C4C4', position: 'relative'}}>
-                      <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: 'bold'}}>Service</Text>
-                      <Text style={{marginLeft: 50, color: '#175873'}}>Check your electronics damage</Text>
-                      <Image
-                        style={{position: 'absolute', top: 10, left: 10}}
-                        source={require('../../../assets/images/palu.png')}
-                      />
-                      <Image
-                        style={{position: 'absolute', top: 15, left: 380}}
-                        source={require('../../../assets/images/next.png')}
-                      />
-                </View>
-            </TouchableOpacity>
+            {
+              this.props.detailOnProcess.teknisi.status_teknisi === "Need confirmation" ?
+              <TouchableOpacity onPress={async () => {
+                await this.props.dispatchDetailDamages(this.props.detailOnProcess.damage)
+                this.props.navigation.navigate('DetailDamages')
+                }}>
+                  <View style={{borderBottomWidth: 1, height: 60, borderBottomColor: '#C4C4C4', position: 'relative'}}>
+                          <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: 'bold'}}>Service</Text>
+                          <Text style={{marginLeft: 50, color: '#175873'}}>Check your electronics damage</Text>
+                          <Image
+                            style={{position: 'absolute', top: 10, left: 10}}
+                            source={require('../../../assets/images/palu.png')}
+                          />
+                          <Image
+                            style={{position: 'absolute', top: 15, left: 380}}
+                            source={require('../../../assets/images/next.png')}
+                          />
+                    </View>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity disabled={true} onPress={() => this.props.navigation.navigate('DetailDamages')}>
+                  <View style={{borderBottomWidth: 1, height: 60, borderBottomColor: '#C4C4C4', position: 'relative'}}>
+                          <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: 'bold'}}>Service</Text>
+                          <Text style={{marginLeft: 50, color: '#175873'}}>Check your electronics damage</Text>
+                          <Image
+                            style={{position: 'absolute', top: 10, left: 10}}
+                            source={require('../../../assets/images/palu.png')}
+                          />
+                          <Image
+                            style={{position: 'absolute', top: 15, left: 380}}
+                            source={require('../../../assets/images/next.png')}
+                          />
+                  </View>
+                </TouchableOpacity>
+            }
               {/* Technician */}
+              {
+                this.props.detailOnProcess.teknisi.status_teknisi === "Need confirmation" ?
                 <View style={{borderBottomWidth: 1, height: 75, borderBottomColor: '#C4C4C4', position: 'relative', flexDirection: 'row'}}>
                     <View>
                       <Text style={{fontSize:20, color:'#000000', marginLeft: 50, marginTop:15, fontWeight: 'bold'}}>Technician</Text>
-                      <Text style={{ marginLeft: 55}}>Elba Ayu Kurnia</Text>
+                      <Text style={{ marginLeft: 55}}>{this.props.detailOnProcess.teknisi.namaTeknisi}</Text>
+                    </View>
+                    {/* Status */}
+                    <View style={{marginLeft: 130, marginTop: 20}}>
+                      <Text style={{color: '#175873', fontFamily: 'roboto'}}>Need Confirmation !</Text>
+                    </View>
+                    <Image
+                      style={{position: 'absolute', top: 15, left: 10}}
+                      source={require('../../../assets/images/mechanic-small.png')}
+                    />
+                </View>
+                :
+                <View style={{borderBottomWidth: 1, height: 75, borderBottomColor: '#C4C4C4', position: 'relative', flexDirection: 'row'}}>
+                    <View>
+                      <Text style={{fontSize:20, color:'#000000', marginLeft: 50, marginTop:15, fontWeight: 'bold'}}>Technician</Text>
+                      <Text style={{ marginLeft: 55}}>{this.props.detailOnProcess.teknisi.namaTeknisi}</Text>
                     </View>
                     {/* Status */}
                     <View style={{marginLeft: 170, marginTop: 20}}>
@@ -64,19 +104,20 @@ class Component extends React.Component {
                       source={require('../../../assets/images/mechanic-small.png')}
                     />
                 </View>
+              }
 
                 {/* Location */}
                 <View style={{position: 'relative'}}>
                   {/* Your Loaction */}
                   <View style={{marginBottom: 27}}>
                     <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: '500'}}>Your Location</Text>
-                    <Text style={{marginLeft: 50}}>Jl. Siliwangi No. 48</Text>
+                    <Text style={{marginLeft: 50}}>{this.props.detailOnProcess.lokasiPelanggan}</Text>
                   </View>
 
                   {/* Technician Location */}
                   <View style={{marginTop: 27}}>
                     <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: '500'}}>Technician Location</Text>
-                    <Text style={{marginLeft: 50}}>Jl. Asia Afrika No. 32</Text>
+                    <Text style={{marginLeft: 50}}>{this.props.detailOnProcess.teknisi.lokasiTeknisi}</Text>
                   </View>
                   <Image
                     style={{position: 'absolute', top: 10, left: 10}}
@@ -122,4 +163,21 @@ class Component extends React.Component {
   }
 }
 
-export default (Component)
+const mapStateToProps = state => {
+  return {
+    waitingService:state.waitingService,
+    onProcessService:state.onProcessService,
+    doneService:state.doneService,
+    detailOnProcess: state.detailOnProcess
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatchDetailWaiting: (kategori, lokasiPelanggan, teknisi) => dispatch(detailWaiting(kategori, lokasiPelanggan, teknisi)),
+    dispatchDetailOnProcess: (damage, lokasiPelanggan, teknisi) => dispatch(detailOnProcess(damage, lokasiPelanggan, teknisi)),
+    dispatchDetailDamages: (damages) => dispatch(detailDamages(damages))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Component)
