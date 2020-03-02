@@ -1,5 +1,5 @@
 const network = {
-    ADDRESS : "http://192.168.100.29:8000"
+    ADDRESS : "https://l-fix.herokuapp.com"
 }
 
 export default network;

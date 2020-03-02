@@ -23,6 +23,7 @@ import detailOnProcessReducer from './detailOnProcess';
 import detailDamageReducer from './detailDamages';
 import detailDoneReducer from './detailDone';
 import ratingReducer from './rating';
+import detailGuaranteeReducer from './detailGuarantee';
 
 const rootReducer = combineReducers({
   // form: formReducer,
@@ -49,7 +50,8 @@ const rootReducer = combineReducers({
   detailOnProcess: detailOnProcessReducer,
   detailDamage: detailDamageReducer,
   detailDone: detailDoneReducer,
-  rating: ratingReducer
+  rating: ratingReducer,
+  detailGuarantee: detailGuaranteeReducer
 });
 
 export default rootReducer;

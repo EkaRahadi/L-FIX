@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
     height: 70,
     marginHorizontal: 15,
     marginTop: 15,
-    elevation: 5,
     position: 'relative'
     // justifyContent: 'center',
     // alignItems: 'center'

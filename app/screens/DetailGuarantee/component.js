@@ -1,7 +1,10 @@
 import React from 'react';
-import { View, Image, StatusBar, Text, TouchableOpacity } from 'react-native';
+import { View, Image, StatusBar, Text, TouchableOpacity, Alert } from 'react-native';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
+import {detailGuarantee} from '../../actions';
+import { connect } from 'react-redux';
+import network from '../../network';
 // import Checkbox from 'react-native-custom-checkbox';
 import Button from '../../components/elements/Button';
 
@@ -17,7 +20,31 @@ class Component extends React.Component {
   _onPress = () => {
     this.props.navigation.navigate('GuaranteeScreen');
   };
+
+  _claim = async () => {
+   await fetch(network.ADDRESS+'/claim_guarantee', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        id_service : this.props.detailGuarantee.guarantee.id_service
+      })
+    }).then( response => response.json())
+      .then(responseJson => {
+        if(responseJson.success === true) {
+          Alert.alert('Success Claim !')
+        }
+        else {
+          Alert.alert('Failed Claim !')
+        }
+      })
+      .catch( error => Alert.alert(JSON.stringify(error)))
+
+      this.props.navigation.navigate('GuaranteeScreen')
+  }
   render() {
+    console.log(this.props.detailGuarantee.guarantee)
     return (
       <View style={{backgroundColor: '#ffffff', flex:1}}>
         <StatusBar
@@ -36,27 +63,27 @@ class Component extends React.Component {
           <View>
             {/* Service */}
                 <View style={{borderBottomWidth: 1, height: 50, borderBottomColor: '#C4C4C4', position: 'relative'}}>
-                      <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:10, fontWeight: 'bold'}}>Refrigerator</Text>
+                      <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:10, fontWeight: 'bold'}}>{this.props.detailGuarantee.kategori}</Text>
                       <Image
                         style={{position: 'absolute', top: 10, left: 10}}
                         source={require('../../../assets/images/palu.png')}
                       />
                 </View>
 
-            {/* Service End Date */}
+            {/* Service End Date
                 <View style={{borderBottomWidth: 1, height: 60, borderBottomColor: '#C4C4C4', position: 'relative'}}>
                     <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: 'bold'}}>Service End Date</Text>
-                    <Text style={{marginLeft: 45}}>07-April-2019</Text>
+                    <Text style={{marginLeft: 45}}>07-April-2019-Belum</Text>
                     <Image
                         style={{position: 'absolute', top: 10, left: 10}}
                         source={require('../../../assets/images/date-small.png')}
                       />
-                </View>
+                </View> */}
 
             {/* Guarantee End Date */}
                 <View style={{borderBottomWidth: 1, height: 60, borderBottomColor: '#C4C4C4', position: 'relative'}}>
                         <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: 'bold'}}>Guarantee End Date</Text>
-                        <Text style={{marginLeft: 45}}>07-April-2019</Text>
+                        <Text style={{marginLeft: 45}}>{this.props.detailGuarantee.guarantee.valid_until}</Text>
                         <Image
                             style={{position: 'absolute', top: 10, left: 10}}
                             source={require('../../../assets/images/date-small.png')}
@@ -67,7 +94,7 @@ class Component extends React.Component {
                 <View style={{borderBottomWidth: 1, height: 65, borderBottomColor: '#C4C4C4', position: 'relative', flexDirection: 'row'}}>
                       <View>
                         <Text style={{fontSize:20, color:'#000000', marginLeft: 50, marginTop:10, fontWeight: 'bold'}}>Technician</Text>
-                        <Text style={{ marginLeft: 55}}>Elba Ayu Kurnia</Text>
+                        <Text style={{ marginLeft: 55}}>{this.props.detailGuarantee.teknisi.namaTeknisi}</Text>
                       </View>
                       <Image
                         style={{position: 'absolute', top: 10, left: 10}}
@@ -80,13 +107,13 @@ class Component extends React.Component {
                   {/* Your Loaction */}
                   <View style={{marginBottom: 27}}>
                     <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: '500'}}>Your Location</Text>
-                    <Text style={{marginLeft: 50}}>Jl. Siliwangi No. 48</Text>
+                    <Text style={{marginLeft: 50}}>{this.props.detailGuarantee.lokasiPelanggan}</Text>
                   </View>
 
                   {/* Technician Location */}
                   <View style={{marginTop: 27}}>
                     <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:5, fontWeight: '500'}}>Technician Location</Text>
-                    <Text style={{marginLeft: 50, marginBottom: 5}}>Jl. Asia Afrika No. 32</Text>
+                    <Text style={{marginLeft: 50, marginBottom: 5}}>{this.props.detailGuarantee.teknisi.lokasiTeknisi}</Text>
                   </View>
                   <Image
                     style={{position: 'absolute', top: 10, left: 10}}
@@ -123,7 +150,7 @@ class Component extends React.Component {
 
           {/* Button */}
           <View style={{flex: 1,alignItems: 'center', justifyContent: 'flex-end'}}>
-              <TouchableOpacity onPress={() => {/**Handle Press */}}>
+              <TouchableOpacity onPress={this._claim}>
                 <View style={{backgroundColor: '#175873', height: 33, width:170, borderRadius:25, justifyContent: 'center', alignItems: 'center', marginBottom:20}}>
                   <Text style={{color:'#FFFFFF', fontFamily: 'roboto', fontWeight: 'bold', fontSize: 20}}>Claim</Text>
                 </View>
@@ -135,4 +162,18 @@ class Component extends React.Component {
   }
 }
 
-export default (Component)
+const mapStateToProps = state => {
+  return {
+    doneService:state.doneService,
+    detailDone: state.detailDone,
+    detailGuarantee: state.detailGuarantee
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatchDetailGuarantee: (kategori, lokasiPelanggan, teknisi, guarantee) => dispatch(detailGuarantee(kategori, lokasiPelanggan, teknisi, guarantee))
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Component)

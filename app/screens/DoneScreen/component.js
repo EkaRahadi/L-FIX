@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Image, StatusBar, Text, TouchableOpacity } from 'react-native';
 import Back from '../../../assets/svgs/Back';
-import {waitingService, onProcessService, doneService, detailWaiting, detailOnProcess, detailDone, detailDamages, rating} from '../../actions';
+import {waitingService, onProcessService, doneService, detailWaiting, detailOnProcess, 
+  detailDone, detailDamages, rating, detailGuarantee} from '../../actions';
 import { connect } from 'react-redux';
 import styles from './styles';
 // import Checkbox from 'react-native-custom-checkbox';
@@ -62,7 +63,7 @@ class Component extends React.Component {
                   await this.props.dispatchDataRating(this.props.detailDone.teknisi)
                   this.props.navigation.navigate('Rating')
                   }}>
-                    <View style={{borderBottomWidth: 1, height: 85, borderBottomColor: '#C4C4C4', position: 'relative', flexDirection: 'row'}}>
+                    <View style={{borderBottomWidth: 1, height: 95, borderBottomColor: '#C4C4C4', position: 'relative', flexDirection: 'row'}}>
                         <View>
                             <Text style={{fontSize:20, color:'#000000', marginLeft: 50, marginTop:15, fontWeight: 'bold'}}>Technician</Text>
                             <Text style={{ marginLeft: 55}}>{this.props.detailDone.teknisi.namaTeknisi}</Text>
@@ -99,7 +100,11 @@ class Component extends React.Component {
               }
 
                 {/* Guarantee */}
-                <TouchableOpacity onPress={() => {this.props.navigation.navigate('GuaranteeScreen')}}>
+                <TouchableOpacity onPress={async () => {
+                  await this.props.dispatchDetailGuarantee(this.props.detailDone.kategori, this.props.detailDone.lokasiPelanggan,
+                    this.props.detailDone.teknisi, this.props.detailDone.guarantee)
+                  this.props.navigation.navigate('DetailGuarantee')
+                  }}>
                   <View style={{borderBottomWidth: 1, height: 60, borderBottomColor: '#C4C4C4', position: 'relative'}}>
                         <Text style={{fontSize:20, color:'#000000', marginLeft: 45, marginTop:15, fontWeight: 'bold'}}>Guarantee</Text>
                         <Image
@@ -175,7 +180,8 @@ const mapDispatchToProps = dispatch => {
     dispatchDetailOnProcess: (damage, lokasiPelanggan, teknisi) => dispatch(detailOnProcess(damage, lokasiPelanggan, teknisi)),
     dispatchDetailDone: (damage, lokasiPelanggan, teknisi) => dispatch(detailDone(damage, lokasiPelanggan, teknisi)),
     dispatchDetailDamages: (damages) => dispatch(detailDamages(damages)),
-    dispatchDataRating: (teknisi) => dispatch(rating(teknisi))
+    dispatchDataRating: (teknisi) => dispatch(rating(teknisi)),
+    dispatchDetailGuarantee: (kategori, lokasiPelanggan, teknisi, guarantee) => dispatch(detailGuarantee(kategori, lokasiPelanggan, teknisi, guarantee))
   }
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StatusBar, FlatList, Text, TextInput, ImageBackground, Alert } from 'react-native';
+import { View, Image, StatusBar, FlatList, Text, TextInput, ImageBackground, Alert, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
@@ -15,6 +15,29 @@ class Component extends React.Component {
     this.state = {
       isLoading: false,
     };
+  }
+
+  _cancelTeknisi = async () => {
+    await fetch(network.ADDRESS+'/cancel_teknisi', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        id_service : this.props.detailWaiting.idService
+      })
+    }).then( response => response.json())
+      .then(responseJson => {
+        if(responseJson.success === true) {
+          Alert.alert('Success Cancel Service !')
+        }
+        else {
+          Alert.alert('Failed Cancel Service !')
+        }
+      })
+      .catch( error => Alert.alert(JSON.stringify(error)))
+
+      this.props.navigation.navigate('ServiceScreen')
   }
 
   render() {
@@ -47,7 +70,7 @@ class Component extends React.Component {
           </View>
           <View style={{flexDirection: 'row', alignSelf: 'center', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', marginHorizontal: 30, marginTop:10}}>
             <Text>Phone : </Text>
-            <Text>phone blm ada diresponse api</Text>
+            <Text>{this.props.detailTechnician.teknisi.no_hp}</Text>
           </View>
           <View style={{flexDirection: 'row', alignSelf: 'center', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', marginHorizontal: 30, marginTop:10}}>
             <Image
@@ -56,6 +79,14 @@ class Component extends React.Component {
             />
             <Text style={{marginLeft: 10}}>{this.props.detailTechnician.teknisi.lokasiTeknisi}</Text>
           </View>
+       </View>
+       {/* Button Cancel */}
+       <View style={{flex:1, justifyContent: 'center', alignItems: 'center', alignSelf: 'center'}}>
+          <TouchableOpacity onPress={this._cancelTeknisi}>
+              <View style={{borderColor: '#DB1313', borderWidth: 2.5, width: 120, height: 33, justifyContent: 'center', alignItems: 'center', borderRadius:25, marginBottom:20}}>
+                <Text style={{color:'#DB1313', fontFamily: 'roboto', fontWeight: '500', fontSize: 15}}>Cancel</Text>
+              </View>
+          </TouchableOpacity>
        </View>
      </View> 
     );

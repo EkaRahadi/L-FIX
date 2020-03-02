@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StatusBar, FlatList, Text, TextInput, ImageBackground, ScrollView, Alert } from 'react-native';
+import { View, Image, StatusBar, FlatList, Text, TextInput, ImageBackground, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
@@ -48,7 +48,7 @@ class Component extends React.Component {
       body: JSON.stringify({
         lokasiPelanggan: this.state.location,
         kategori: this.props.dataCategory.nameCategory,
-        userId: 3
+        userId: this.props.userAccount.data.data.id
       })
     })
       .then(response => response.json())
@@ -90,9 +90,11 @@ class Component extends React.Component {
     
   }
 
+  _SnK = async () => {
+    this.props.navigation.navigate('TermsConditions');
+  }
+
   render() {
-    // console.log(this.props.dataCategory.nameCategory);
-    console.log(this.state.location);
     return (
       <View style={{backgroundColor: '#ffffff', flex:1}}>
         <StatusBar
@@ -105,10 +107,12 @@ class Component extends React.Component {
           <Text style={styles.title}>{this.props.dataCategory.nameCategory}</Text>
         </View>
 
-        <View style={{borderWidth:1, borderRadius:100/10, height: 40, width:350, marginTop:30, alignSelf:'center', flexDirection:'row', justifyContent:'center'}}>
-          <Text style={{color:'#000', fontSize: 20, fontWeight:'400', alignSelf:'center'}}>Syarat dan Ketentuan</Text>
-          <Image style={{width:30, height:30, marginTop: 5, marginLeft:15}} source={require('../../../assets/images/arrowright.png')}/>
-        </View>
+        <TouchableOpacity onPress={this._SnK}>
+          <View style={{borderWidth:1, borderRadius:100/10, height: 40, width:350, marginTop:30, alignSelf:'center', flexDirection:'row', justifyContent:'center'}}>
+            <Text style={{color:'#000', fontSize: 20, fontWeight:'400', alignSelf:'center'}}>Syarat dan Ketentuan</Text>
+            <Image style={{width:30, height:30, marginTop: 5, marginLeft:15}} source={require('../../../assets/images/arrowright.png')}/>
+          </View>
+        </TouchableOpacity>
 
         <View style={{marginTop:30, justifyContent:'space-between', width:350, flexDirection:'row', alignSelf:'center'}}>
           <Image style={{width:30, height:30, marginTop: 5, marginLeft:5 }} source={require('../../../assets/images/blueloc.png')}/>

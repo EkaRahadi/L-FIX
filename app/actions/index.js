@@ -135,12 +135,14 @@ export const doneService = (data) => {
     }
 }
 
-export const detailWaiting = (kategori, lokasiPelanggan, data) => {
+export const detailWaiting = (kategori, lokasiPelanggan, data, idService, kode_service) => {
     return {
         type: 'DETAIL_WAITING',
         payload: data,
         kategori: kategori,
-        lokasiPelanggan: lokasiPelanggan
+        lokasiPelanggan: lokasiPelanggan,
+        idService: idService,
+        kode_service: kode_service
 
     }
 }
@@ -152,12 +154,14 @@ export const detailTecnician = (data) => {
     }
 }
 
-export const detailOnProcess = (damage, lokasiPelanggan, teknisi) => {
+export const detailOnProcess = (damage, lokasiPelanggan, teknisi, idService, kode_service) => {
     return {
         type: 'DETAIL_ONPROCESS',
         teknisi: teknisi,
         damage: damage,
-        lokasiPelanggan: lokasiPelanggan
+        lokasiPelanggan: lokasiPelanggan,
+        idService: idService,
+        kode_service: kode_service
 
     }
 }
@@ -169,12 +173,15 @@ export const detailDamages = (data) => {
     }
 }
 
-export const detailDone = (damage, lokasiPelanggan, teknisi) => {
+export const detailDone = (damage, lokasiPelanggan, teknisi, kategori, guarantee, kode_service) => {
     return {
         type: 'DETAIL_DONE',
         teknisi: teknisi,
         damage: damage,
-        lokasiPelanggan: lokasiPelanggan
+        lokasiPelanggan: lokasiPelanggan,
+        kategori: kategori,
+        guarantee: guarantee,
+        kode_service: kode_service
 
     }
 }
@@ -182,6 +189,16 @@ export const detailDone = (damage, lokasiPelanggan, teknisi) => {
 export const rating = (teknisi) => {
     return {
         type: 'RATING',
-        teknisi: teknisi
+        teknisi: teknisi,
+    }
+}
+
+export const detailGuarantee = (kategori, lokasiPelanggan, teknisi, guarantee) => {
+    return {
+        type: 'DETAIL_GUARANTEE',
+        teknisi: teknisi,
+        kategori: kategori,
+        lokasiPelanggan: lokasiPelanggan,
+        guarantee: guarantee
     }
 }

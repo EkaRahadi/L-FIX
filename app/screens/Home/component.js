@@ -53,7 +53,6 @@ class Component extends React.Component {
               })
             })
             .catch(response => console.log(response))
-    console.log(this.state.data);
   }
 
   _onPress = () => {
@@ -104,7 +103,7 @@ class Component extends React.Component {
                 <View style={{backgroundColor:'#ffffff', width:100, height:130, marginTop:50, marginHorizontal:10, borderRadius:100/6}}>
                     <View style={{backgroundColor:'#175873', borderRadius:100/2, width:90, height:90, marginTop:5, alignSelf:'center'}}>
                     {/* Gambar */}
-                        <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={{uri: network.ADDRESS+item.image.slice(14)}}/>
+                        <Image style={{width:70, height:70, marginTop: 13, marginLeft:10}} source={{uri: item.image}}/>
                     </View>
                     <View style={{height: 1, width: 100, backgroundColor:'#000', marginTop:10}}/>
                         <Text style={{color:'#000', alignSelf:'center'}}>{item.name}</Text>

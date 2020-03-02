@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     ...FONT_HEADLINE6_PRIMARY,
     color: COLOR_WHITE,
     alignSelf: 'center',
-    marginLeft: 130
+    marginLeft: 80
   },
   carousel : {
     position:'absolute',

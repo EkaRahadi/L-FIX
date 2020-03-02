@@ -1,7 +1,9 @@
 const initialState = {
     damage : null,
+    kategori: null,
     lokasiPelanggan: null,
-    teknisi: {}
+    teknisi: {},
+    guarantee: {}
 };
 
 const detailDoneReducer = (state=initialState, action) => {
@@ -10,8 +12,11 @@ const detailDoneReducer = (state=initialState, action) => {
             return {
                 ...state,
                 damage: action.damage,
+                kategori: action.kategori,
                 lokasiPelanggan: action.lokasiPelanggan,
-                teknisi: action.teknisi
+                teknisi: action.teknisi,
+                guarantee: action.guarantee,
+                kode_service: action.kode_service
             };
         default:
             return state;

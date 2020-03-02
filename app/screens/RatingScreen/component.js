@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Image, StatusBar, Text, TouchableOpacity} from 'react-native';
+import { View, Image, StatusBar, Text, TouchableOpacity, Alert} from 'react-native';
 import Textarea from 'react-native-textarea';
 import {waitingService, onProcessService, rating} from '../../actions';
 import { connect } from 'react-redux';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
+import network from '../../network';
 
 
 class Component extends React.Component {
@@ -32,7 +33,37 @@ class Component extends React.Component {
     });
   }
 
+  _rating = async () => {
+    await fetch(network.ADDRESS+'/rating', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        kode_service : this.props.detailDone.kode_service,
+        rating: this.state.Default_Rating,
+        feedback: this.state.feedback
+      })
+    })
+      .then( response => response.json())
+      .then(responseJson => {
+        if(responseJson.success === true) {
+          Alert.alert('Success Rating !')
+          this.props.navigation.navigate('Home');
+        }
+        else {
+          Alert.alert('Failed Rating !')
+          this.props.navigation.navigate('Home');
+        }
+      })
+      .catch(e => {
+        Alert.alert(e)
+        this.props.navigation.navigate('Home');
+      })
+  }
+
   render() {
+    console.log(this.props.detailDone.kode_service)
     let React_Native_Rating_Bar = [];
     for (var i = 1; i<= this.state.Max_Rating; i++){
       React_Native_Rating_Bar.push(
@@ -99,7 +130,7 @@ class Component extends React.Component {
             {/* Phone */}
             <View style={{flexDirection: 'row', marginBottom: 5}}>
               <Text>Phone : </Text>
-              <Text>Phone key nya masih pake spasi</Text>
+              <Text>{this.props.teknisi.teknisi.no_hp}</Text>
             </View>
       
             {/* Location */}
@@ -123,7 +154,7 @@ class Component extends React.Component {
 
           {/* Button */}
           <View style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center', marginBottom:10}}>
-            <TouchableOpacity onPress={() => {/**Handle Press */}}>
+            <TouchableOpacity onPress={this._rating}>
                   <View style={{backgroundColor: '#175873', height: 33, width:170, borderRadius:25, justifyContent: 'center', alignItems: 'center', marginBottom:20}}>
                     <Text style={{color:'#FFFFFF', fontFamily: 'roboto', fontWeight: 'bold', fontSize: 20}}>Submit</Text>
                   </View>
@@ -137,7 +168,9 @@ class Component extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    teknisi: state.rating
+    teknisi: state.rating,
+    detailDone: state.detailDone
+
   }
 };
 

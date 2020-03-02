@@ -21,6 +21,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import DetailTechnician from '../screens/DetailTechnician';
 import DetailDamages from '../screens/DetailDamages';
 import DetailDamagesDone from '../screens/DetailDamagesDone';
+import TermsAndConditions from '../screens/TermsNCondicitions';
 
 export default SwitchNavigator(
   {
@@ -45,7 +46,8 @@ export default SwitchNavigator(
     Register: RegisterScreen,
     DetailTechnician: DetailTechnician,
     DetailDamages: DetailDamages,
-    DetailDamagesDone: DetailDamagesDone
+    DetailDamagesDone: DetailDamagesDone,
+    TermsConditions: TermsAndConditions
   },
   {
     initialRouteName: 'LoginRegister'

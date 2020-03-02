@@ -32,7 +32,7 @@ class Component extends React.Component {
               'Content-Type' : 'application/json'
             },
             body : JSON.stringify({
-              userId: 1
+              userId: this.props.userAccount.data.data.id
             })
           })
             .then(response => response.json())
@@ -66,6 +66,10 @@ class Component extends React.Component {
                   await this.props.dispatchWaiting(waiting);
                   await this.props.dispatchOnProcess(onProcess);
                   await this.props.dispatchDone(done);
+                  this.setState({
+                    ...this.state,
+                    isLoading: false
+                  })
               }
             })
             .catch(response => {
@@ -103,7 +107,7 @@ class Component extends React.Component {
                 renderItem={({item, index}) => (
                   <View>
                     <TouchableOpacity onPress={async () => {
-                     await this.props.dispatchDetailWaiting(item.kategori, item.lokasiPelanggan, item.teknisi);
+                     await this.props.dispatchDetailWaiting(item.kategori, item.lokasiPelanggan, item.teknisi, item.idService, item.kode_service);
                       this.props.navigation.navigate('Waiting');
                     }}>
                       <View style={styles.containerInsideTab}>
@@ -145,7 +149,7 @@ class Component extends React.Component {
                 renderItem={({item, index}) => (
                   <View>
                     <TouchableOpacity onPress={async () => {
-                      await this.props.dispatchDetailOnProcess(item.damage, item.lokasiPelanggan, item.teknisi)
+                      await this.props.dispatchDetailOnProcess(item.damage, item.lokasiPelanggan, item.teknisi, item.idService, item.kode_service)
                       this.props.navigation.navigate('OnProcess')
                       }}>
                       <View style={styles.containerInsideTab}>
@@ -176,7 +180,7 @@ class Component extends React.Component {
                 renderItem={({item, index}) => (
                   <View>
                     <TouchableOpacity onPress={async () => {
-                      await this.props.dispatchDetailDone(item.damage, item.lokasiPelanggan, item.teknisi)
+                      await this.props.dispatchDetailDone(item.damage, item.lokasiPelanggan, item.teknisi, item.kategori, item.guarantee, item.kode_service)
                       this.props.navigation.navigate('Done')
                       }}>
                       <View style={styles.containerInsideTab}>
@@ -198,6 +202,7 @@ class Component extends React.Component {
   } 
 
   render() {
+    console.log(this.props.doneService.done)
     return (
         <View style={styles.container}>
           <Tabs
@@ -230,7 +235,8 @@ const mapStateToProps = state => {
     //  dataUser : state.dataProject,
     waitingService:state.waitingService,
     onProcessService:state.onProcessService,
-    doneService:state.doneService
+    doneService:state.doneService,
+    userAccount:state.userAccount
   }
 };
 
@@ -239,9 +245,9 @@ const mapDispatchToProps = dispatch => {
     dispatchWaiting : (waiting) => dispatch(waitingService(waiting)),
     dispatchOnProcess : (onProcess) => dispatch(onProcessService(onProcess)),
     dispatchDone : (done) => dispatch(doneService(done)),
-    dispatchDetailWaiting: (kategori, lokasiPelanggan, teknisi) => dispatch(detailWaiting(kategori, lokasiPelanggan, teknisi)),
-    dispatchDetailOnProcess: (damage, lokasiPelanggan, teknisi) => dispatch(detailOnProcess(damage, lokasiPelanggan, teknisi)),
-    dispatchDetailDone: (damage, lokasiPelanggan, teknisi) => dispatch(detailDone(damage, lokasiPelanggan, teknisi))
+    dispatchDetailWaiting: (kategori, lokasiPelanggan, teknisi, idService, kode_service) => dispatch(detailWaiting(kategori, lokasiPelanggan, teknisi, idService, kode_service)),
+    dispatchDetailOnProcess: (damage, lokasiPelanggan, teknisi, idService, kode_service) => dispatch(detailOnProcess(damage, lokasiPelanggan, teknisi, idService, kode_service)),
+    dispatchDetailDone: (damage, lokasiPelanggan, teknisi, kategori, guarantee, kode_service) => dispatch(detailDone(damage, lokasiPelanggan, teknisi, kategori, guarantee, kode_service))
   }
 };
 

@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Image, StatusBar, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, Image, StatusBar, Text, TouchableOpacity, Modal, Alert } from 'react-native';
 import Back from '../../../assets/svgs/Back';
 import styles from './styles';
 import ConfirmModal from '../../components/modals/ConfirmModal';
 import {detailWaiting, detailTecnician} from '../../actions';
 import { connect } from 'react-redux';
+import network from '../../network';
 
 
 class Component extends React.Component {
@@ -27,8 +28,53 @@ class Component extends React.Component {
     //Handle COnfirm Here
   }
 
+  _confirmTeknisi = async () => {
+    await fetch(network.ADDRESS+'/confirm_teknisi', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        id_service : this.props.detailWaiting.idService
+      })
+    }).then( response => response.json())
+      .then(responseJson => {
+        if(responseJson.success === true) {
+          Alert.alert('Success Confirm Service !')
+        }
+        else {
+          Alert.alert('Failed Confirm Service !')
+        }
+      })
+      .catch( error => Alert.alert(JSON.stringify(error)))
+
+      this.props.navigation.navigate('ServiceScreen')
+  }
+
+  _cancelService = async () => {
+    await fetch(network.ADDRESS+'/cancel_service', {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify({
+        kode_service : this.props.detailWaiting.kode_service
+      })
+    }).then( response => response.json())
+      .then(responseJson => {
+        if(responseJson.success === true) {
+          Alert.alert('Success Cancel Service !')
+        }
+        else {
+          Alert.alert('Failed Cancel Service !')
+        }
+      })
+      .catch( error => Alert.alert(JSON.stringify(error)))
+
+      this.props.navigation.navigate('ServiceScreen')
+  }
+
   render() {
-    console.log(this.props.detailWaiting.teknisi.namaTeknisi === null)
     return (
       <View style={{backgroundColor: '#ffffff', flex:1}}>
         <StatusBar
@@ -63,7 +109,7 @@ class Component extends React.Component {
                     source={require('../../../assets/images/small_location.png')}
                   />
               </View>
-              {this.props.detailWaiting.teknisi.namaTeknisi === null ?
+              {this.props.detailWaiting.teknisi === null ?
               <TouchableOpacity disabled={true}>
                       {/* Technician */}
                   <View style={{borderBottomWidth: 1, height: 85, borderBottomColor: '#C4C4C4', position: 'relative'}}>
@@ -114,16 +160,16 @@ class Component extends React.Component {
           {/* Button */}
           <View style={{ flex:1, justifyContent: 'flex-end', alignItems: 'center', marginBottom: 10}}>
               {/* Button Cancel */}
-              <TouchableOpacity onPress={() => {this.changeModalVisibility(true)}}>
+              <TouchableOpacity onPress={this._cancelService}>
                 <View style={{borderColor: '#DB1313', borderWidth: 2.5, width: 120, height: 33, justifyContent: 'center', alignItems: 'center', borderRadius:25, marginBottom:20}}>
                   <Text style={{color:'#DB1313', fontFamily: 'roboto', fontWeight: '500', fontSize: 15}}>Cancel</Text>
                 </View>
               </TouchableOpacity>
               {/* Button Confirm */}
-              {this.props.detailWaiting.teknisi.namaTeknisi === null ?
+              {this.props.detailWaiting.teknisi === null ?
               null
               :
-              <TouchableOpacity onPress={() => {/**Handle Press */}}>
+              <TouchableOpacity onPress={this._confirmTeknisi}>
                 <View style={{backgroundColor: '#175873', height: 33, width:170, borderRadius:25, justifyContent: 'center', alignItems: 'center', marginBottom:20}}>
                   <Text style={{color:'#FFFFFF', fontFamily: 'roboto', fontWeight: 'bold', fontSize: 20}}>Confirm</Text>
                 </View>
